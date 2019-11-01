@@ -14,7 +14,7 @@ from img_spider.items import ImgSpiderItem
 
 class ImgSpiderPipeline(object):
     def process_item(self, item, spider):
-        pass
+        return item
 
 class SinaImgPipeline(ImagesPipeline):
     def get_media_requests(self, item, info):
