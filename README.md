@@ -35,20 +35,41 @@ def move(srcBasePath, dstBasePath, list_name):
         os.remove(srcBasePath+"/"+name)
 
 
-def merge(base_path):
-    list_dir = os.listdir(path)
+def merge(base_path, final_dir):
+    list_dir = os.listdir(base_path)
     list_dir.sort()
-    k = open(path + "/result.txt", 'a+')
-    # list_dir.reverse()
+    b = False
+    pathh = ''
     for name in list_dir:
-        pathh = path + "/" + name
-        f = open(pathh)
-        k.write(f.read() + "\n")
-    k.close()
+        if name.startswith('.'):
+            continue
+        pathtemp = os.path.join(base_path, name)
+        if os.path.isdir(pathtemp):
+            pathh = os.path.join(base_path, name)
+            merge(pathh, final_dir)
+        else:
+            b = True
+            break
+
+    if b:
+        if not os.path.exists(final_dir):
+            os.makedirs(final_dir)
+        i = base_path.rfind("/") + 1
+        merge_file_name = base_path[i:]
+        k = open(final_dir + "/" + merge_file_name + ".txt", 'a+')
+        # list_dir.reverse()
+        for name in list_dir:
+            if name.startswith('.'):
+                continue
+            pathh = base_path + "/" + name
+            f = open(pathh)
+            k.write(f.read() + "\n")
+        k.close()
 
 
 
 if __name__ == "__main__":
-    path = "/Users/zhangyafeng1/Desktop/testfile/txt"
-    file_list = getFileList(path)
-    check("/Users/zhangyafeng1/Desktop/testfile/txt","/Users/zhangyafeng1/Desktop/testfile/合并", file_list)
+    # path = "/Users/zhangyafeng1/Desktop/testfile/txt"
+    # file_list = getFileList(path)
+    # check("/Users/zhangyafeng1/Desktop/testfile/txt","/Users/zhangyafeng1/Desktop/testfile/合并/合并1/合并2", file_list)
+    merge("/Users/zhangyafeng1/Desktop/testfile/合并", "/Users/zhangyafeng1/Desktop/testfile/最终")
